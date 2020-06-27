@@ -1,0 +1,8 @@
+<launch>
+
+    <arg name="path" default="/home/charlie/Project/RobotArm/" />
+    <arg name="file" default="2020-06-24-11-27-09.bag" />
+    <node pkg="rosbag" type="play" name="player" args="$(arg path)$(arg file)" />
+    <node name="Subscriber" pkg="arm_control" output="screen" type="Subscriber.py" />
+    
+</launch>

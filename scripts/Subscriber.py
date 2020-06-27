@@ -32,7 +32,7 @@ class Subscriber:
 
         
         # cv2.imshow("Image Window", cv_image)
-        print("Subscribed")
+        # print("Subscribed")
         self.vision.mainLoop(cv_image, cv_depth_image)
 
         # dirName = "/home/charlie/Project/RobotArm/src/arm_control/scripts/calib_images/"
@@ -52,3 +52,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("Shutting Down")
     cv2.destroyAllWindows()
+

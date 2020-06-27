@@ -44,6 +44,22 @@ class SerialLink(object):
             pos = np.dot(pos, A)
         return pos
 
+    # def jacobian(self, thetas):
+    #     if len(thetas) != len(self.links):
+    #         return None
+
+    #     pos = np.diag([1,1,1,1])
+    #     linkEndPositions = []
+    #     for i in range(len(thetas)):
+    #         link = self.links[i]
+    #         theta = thetas[i]
+    #         A = link.A(theta)
+    #         pos = np.dot(pos, A)
+    #         linkEndPositions.append(np.squeeze(np.asarray(pos[0:3,3])).tolist())
+
+    #     endEffectorPos = linkEndPositions[-1]
+    #     for linkEndPos in linkEndPositions:
+
     def plot(self):
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')

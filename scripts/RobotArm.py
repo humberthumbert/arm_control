@@ -6,15 +6,16 @@ import time
 import serial
 from Interpolation import *
 from Dijkstra import find_min_path
-
+l0 = 9.6526
 class RobotArm(SerialLink):
     def __init__(self, l0, l1, l2, l3, serial_port=None):
+        #  104.0153, 88.6725, 170.8423
         DHparams = [
-            [0, 0, 0],
-            [0, l0, PI/2], 
-            [0, l1, 0],
-            [0, l2, 0],
-            [0, l3, 0]]
+            [0,         0,          0],
+            [0,         l0,         PI/2], 
+            [0,         l1,         0],
+            [0,         l2,         0],
+            [0,         l3,         0]]
         super(RobotArm, self).__init__(DHparams)
         self.l0, self.l1, self.l2, self.l3 = (l0, l1, l2, l3)
         if serial_port is not None:
@@ -99,6 +100,8 @@ class RobotArm(SerialLink):
             theta0 = -PI/2
         else:
             theta0 = np.arctan(x/y)
+        
+        print(theta0 / np.pi * 180)
         return (theta0, theta1, theta2, theta3, 0, 0)
 
     def inverse_kinematics__(self, x,y,z, alpha):
@@ -127,7 +130,7 @@ class RobotArm(SerialLink):
         min_theta = (min_theta / PI * 2000 + 500) * 0.8
         if min_theta < 20:
             min_theta = 20
-        result += "100|"#str(int(min_theta)) + "|"
+        result += str(int(min_theta)) + "|"
         self.lastPose = thetas
         return result
 
@@ -138,7 +141,9 @@ class RobotArm(SerialLink):
     def move_to(self, x, y, z):
         result = self.inverse_kinematics(x,y,z)
         if result is not None:
-            result = list(reversed(result[0]))  # use the smallest alpha
+            result = list(reversed(result[0][0]))  # use the smallest alpha
+            print("\n\n\n")
+            print(result)
             thetas = "0:" + self.deg_to_signal(result) + ":"
             return (thetas, np.array(result))
         else:
@@ -316,22 +321,21 @@ class RobotArm(SerialLink):
             return True
 
 if __name__ == "__main__":
-    arm = RobotArm(0, 10.4, 8.9, 17.5)#, serial_port='/dev/cu.usbserial-1432230')
-    # isAvailable = arm.move_slerp((15,0,0),(15,15,15), move=True)
-    isAvailable = arm.move_lerp((15,0,0),(15,0,30))
+    arm = RobotArm(0, 104.0153, 88.6725, 170.8423, serial_port='/dev/ttyUSB0')
+    isAvailable = arm.move_to(150,200.0,0)
     arm.send_command(isAvailable[0])
     print(isAvailable[0])
-    arm.animate_real(isAvailable[0])
+    # arm.animate_real(isAvailable[0])
 
-    fig = plt.figure()
-    ax = fig.subplots()
-    x = np.array(list(range(len(isAvailable[1][:,0]))))
-    ax.plot(x, isAvailable[1][:, 2],label="theta 3")
-    ax.plot(x, isAvailable[1][:, 3],label="theta 2")
-    ax.plot(x, isAvailable[1][:, 4],label="theta 1")
-    ax.plot(x, isAvailable[1][:, 2:5].sum(axis=1),label="sum")
-    ax.legend()
-    plt.show()
+    # fig = plt.figure()
+    # ax = fig.subplots()
+    # x = np.array(list(range(len(isAvailable[1][:,0]))))
+    # ax.plot(x, isAvailable[1][:, 2],label="theta 3")
+    # ax.plot(x, isAvailable[1][:, 3],label="theta 2")
+    # ax.plot(x, isAvailable[1][:, 4],label="theta 1")
+    # ax.plot(x, isAvailable[1][:, 2:5].sum(axis=1),label="sum")
+    # ax.legend()
+    # plt.show()
 
     # isAvailable = arm.move_along((15,0,15),(15,15,15), move=True)
     # arm.animate(isAvailable[1][:, 1:])
@@ -359,3 +363,14 @@ if __name__ == "__main__":
     # isAvailable = arm.move_slerp((-10,10,0),(10,10,0))
     # arm.send_command(isAvailable[0])
     # arm.animate_real(isAvailable[0])
+
+    # For later
+        #  104.0153, 88.6725, 170.8423
+        # DHparams = [
+        #     [0,         0,          0],
+        #     [96.0355,   9.6526,     PI/2], 
+        #     [0,         104.0153,   0],
+        #     [0,         88.6725,    0],
+        #     [0,         170.8423,   0]]
+        # super(RobotArm, self).__init__(DHparams)
+        # self.l0, self.l1, self.l2, self.l3 = (9.6526, 104.0153, 88.6725, 170.8423)

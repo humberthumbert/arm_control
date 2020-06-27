@@ -1,0 +1,10 @@
+<launch>
+
+    <arg name="path" default="/home/charlie/Project/RobotArm/" />
+    <arg name="file" default="2020-06-23-12-21-18.bag" />
+    <arg name="topic1" default="/camera/aligned_depth_to_color/image_raw">
+    <arg name="topic2" default="/camera/color/image_raw">
+    <node pkg="rosbag" type="record" name="" args="$(arg topic1) $(arg topic2)" />
+    <node name="Subscriber" pkg="arm_control" output="screen" type="Subscriber.py" />
+    
+</launch>
