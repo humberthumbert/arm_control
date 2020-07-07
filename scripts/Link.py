@@ -8,7 +8,7 @@ class Link(object):
         self.alpha = alpha  # link twist
         self.t = t  # Joint type, 0 for revolute, 1 for prismatic
         self.theta = 0
-        self.mat = np.zeros((4,4))
+        self.mat = self.A(0)
 
     def A(self, theta):
         self.theta = theta

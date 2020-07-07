@@ -321,8 +321,9 @@ class RobotArm(SerialLink):
             return True
 
 if __name__ == "__main__":
-    arm = RobotArm(0, 104.0153, 88.6725, 170.8423, serial_port='/dev/ttyUSB0')
-    isAvailable = arm.move_to(150,200.0,0)
+    arm = RobotArm(0, 104.0153, 88.6725, 170.8423)#, serial_port='/dev/ttyUSB0')
+    # isAvailable = arm.move_lerp((150,0,0),(150,0,300))
+    isAvailable = arm.move_to(20,0,250)
     arm.send_command(isAvailable[0])
     print(isAvailable[0])
     # arm.animate_real(isAvailable[0])
